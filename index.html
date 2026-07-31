@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="pancalculator.png" type="x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Caja Panadería</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>🍞 Caja Panadería</h1>
+    <div class="header-buttons">
+      <button class="btn-header btn-settings" onclick="openPricesModal()">
+        ⚙️ Precios
+      </button>
+      <button class="btn-header" onclick="openSummaryModal()">
+        📊 Resumen
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificación Toast -->
+  <div id="toast" class="toast">Venta guardada exitosamente</div>
+
+  <!-- Ítems Principales -->
+  <div class="card">
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-title">🥐Pan de Dulce</div>
+        <div class="item-price" id="display-price-dulce">$7.00 c/u</div>
+      </div>
+      <div class="counter">
+        <button class="btn-counter" onclick="adjustCount('dulce', -1)">-</button>
+        <input type="number" id="count-dulce" class="count-input" value="0" min="0" oninput="onInputCount('dulce')" onfocus="this.select()">
+        <button class="btn-counter" onclick="adjustCount('dulce', 1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-title">🥯Pan de Torta</div>
+        <div class="item-price" id="display-price-torta">$4.00 c/u</div>
+      </div>
+      <div class="counter">
+        <button class="btn-counter" onclick="adjustCount('torta', -1)">-</button>
+        <input type="number" id="count-torta" class="count-input" value="0" min="0" oninput="onInputCount('torta')" onfocus="this.select()">
+        <button class="btn-counter" onclick="adjustCount('torta', 1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complementos -->
+  <div class="section-title">Complementos</div>
+
+  <div class="card">
+    <div class="item-title" style="margin-bottom: 6px;" id="display-label-bolsa">🛍️Bolsa ($1.00)</div>
+    <div class="options-grid">
+      <button class="option-btn active" id="bolsa-no" onclick="setBolsa(false)">No lleva</button>
+      <button class="option-btn" id="bolsa-si" onclick="setBolsa(true)">Sí lleva</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="item-title" style="margin-bottom: 6px;">🌾Pan Molido</div>
+    <div class="options-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <button class="option-btn active" id="molido-0" onclick="setMolido(0, 0)">Ninguno</button>
+      <button class="option-btn" id="molido-medio" onclick="setMolido('medio', 'medio')">1/2 Kilo</button>
+      <button class="option-btn" id="molido-kilo" onclick="setMolido('kilo', 'kilo')">1 Kilo</button>
+    </div>
+  </div>
+
+  <!-- Productos de Temporada -->
+  <div class="section-title">Pan de Temporada</div>
+  
+  <div id="temporada-container"></div>
+
+  <div class="card">
+    <div class="item-title" style="font-size: 0.9rem; margin-bottom: 6px;">+ Agregar nuevo producto de temporada</div>
+    <div class="add-temp-form">
+      <input type="text" id="new-temp-name" class="input-field" placeholder="Ej. Pan de Muerto" style="flex: 2;">
+      <input type="number" id="new-temp-price" class="input-field" placeholder="Precio $" style="flex: 1;">
+      <button class="btn-add" onclick="addTemporadaItem()">Agregar</button>
+    </div>
+  </div>
+
+  <!-- Panel Inferior de Cobro -->
+  <div class="bottom-panel">
+    <div class="total-row">
+      <span class="total-label">TOTAL:</span>
+      <span class="total-amount" id="total-display">$0.00</span>
+    </div>
+
+    <!-- Botones rápidos de dinero recibido -->
+    <div class="payment-section-title">¿Con cuánto paga?</div>
+    <div class="quick-pay-grid">
+      <button class="btn-pay-quick" onclick="setQuickPay(20)">$20</button>
+      <button class="btn-pay-quick" onclick="setQuickPay(50)">$50</button>
+      <button class="btn-pay-quick" onclick="setQuickPay(100)">$100</button>
+      <button class="btn-pay-quick" onclick="setQuickPay(200)">$200</button>
+      <button class="btn-pay-quick" onclick="setQuickPay(500)">$500</button>
+    </div>
+
+    <div class="payment-row">
+      <div class="payment-input-container">
+        <input type="number" id="pago-input" class="payment-input" placeholder="Otro $" oninput="onCustomPayInput()" onfocus="this.select()">
+      </div>
+      <div class="change-display" id="cambio-display">Cambio: $0.00</div>
+    </div>
+
+    <div class="actions-grid">
+      <button class="btn-action btn-reset" onclick="resetSale()">
+        🗑️ Nueva Venta
+      </button>
+      <button class="btn-action btn-save" onclick="saveSale()">
+        💾 Guardar Venta
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Editar Precios Base -->
+  <div class="modal-overlay" id="prices-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">⚙️ Editar Precios Base</div>
+        <button class="btn-close-modal" onclick="closePricesModal()">✕</button>
+      </div>
+
+      <div class="summary-box">
+        <div class="price-edit-row">
+          <label for="edit-price-dulce">🥐 Pan de Dulce:</label>
+          <input type="number" id="edit-price-dulce" step="0.5">
+        </div>
+        <div class="price-edit-row">
+          <label for="edit-price-torta">🥯 Pan de Torta:</label>
+          <input type="number" id="edit-price-torta" step="0.5">
+        </div>
+        <div class="price-edit-row">
+          <label for="edit-price-bolsa">🛍️ Bolsa:</label>
+          <input type="number" id="edit-price-bolsa" step="0.5">
+        </div>
+        <div class="price-edit-row">
+          <label for="edit-price-molido-medio">🌾 Molido 1/2 Kg:</label>
+          <input type="number" id="edit-price-molido-medio" step="0.5">
+        </div>
+        <div class="price-edit-row" style="margin-bottom: 0;">
+          <label for="edit-price-molido-kilo">🌾 Molido 1 Kg:</label>
+          <input type="number" id="edit-price-molido-kilo" step="0.5">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-share" style="background: var(--primary);" onclick="saveBasePrices()">
+          💾 Guardar Nuevos Precios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Resumen y Reporte -->
+  <div class="modal-overlay" id="summary-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📊 Resumen de Ventas</div>
+        <button class="btn-close-modal" onclick="closeSummaryModal()">✕</button>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-stat">
+          <span>Ventas Realizadas:</span>
+          <strong id="sum-count">0</strong>
+        </div>
+        <div class="summary-stat total">
+          <span>Total Ganado:</span>
+          <span id="sum-total">$0.00</span>
+        </div>
+      </div>
+
+      <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; color: var(--text-muted);">
+        DESGLOSE DE PIEZAS VENDIDAS
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-item-list" id="summary-breakdown"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-share" onclick="shareSummary()">
+          📲 Compartir Resumen (WhatsApp / Redes)
+        </button>
+        <button class="btn-clear-history" onclick="clearSalesHistory()">
+          ⚠️ Reiniciar Contador del Día
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
