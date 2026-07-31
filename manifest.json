@@ -1,32 +1,27 @@
 {
-  "background_color": "#f8fafc",
-  "dir": "ltr",
+  "name": "Calculadora de Panaderia",
+  "short_name": "PanCalculadora",
+  "start_url": "index.html",
   "display": "standalone",
-  "name": "calculadora de pan",
-  "orientation": "portrait",
-  "scope": "/",
-  "short_name": "Pancalculadora",
-  "start_url": "/",
+  "background_color": "#f8fafc",
   "theme_color": "#d97706",
   "icons": [
+      {
+        "src": "pancalculator.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+        {
+        "src": "pancalculator192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+    },
     {
-      "src": "https://pechanalmacen.github.io/Pancalculadora/pancalculator.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "isSquare": true,
-      "isPng": true,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 512,
-      "is512x512": true,
-      "is256x256": false,
-      "is192x192": false
+        "src": "pancalculator512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
     }
-  ],
-  "lang": "es",
-  "categories": [
-    "business",
-    "finance",
-    "food"
   ]
 }

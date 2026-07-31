@@ -3,10 +3,555 @@
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="pancalculator.png" type="x-icon">
-  <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Caja Panadería</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --success: #16a34a;
+      --success-hover: #15803d;
+      --accent: #2563eb;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 12px;
+      max-width: 550px;
+      margin: 0 auto;
+      padding-bottom: 280px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-header {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(37,99,235,0.2);
+    }
+
+    .btn-header.btn-settings {
+      background: #475569;
+      box-shadow: 0 2px 4px rgba(71,85,105,0.2);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+      width: 100%;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .item-price {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-counter {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 1.4rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .btn-counter:active {
+      background: var(--primary-hover);
+      transform: scale(0.95);
+    }
+
+    .count-input {
+      width: 50px;
+      height: 44px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      background: #f1f5f9;
+      color: var(--text);
+    }
+
+    .count-input:focus {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    /* Opciones Toggle */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .option-btn {
+      padding: 12px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .option-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 14px 4px 6px 4px;
+    }
+
+    .add-temp-form {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      width: 100%;
+    }
+
+    .input-field {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 0;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-add {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-delete {
+      background: transparent;
+      color: var(--danger);
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 2px 6px;
+      margin-left: 6px;
+    }
+
+    /* Panel Fijo Inferior */
+    .bottom-panel {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 550px;
+      background: white;
+      border-top: 2px solid var(--border);
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+      z-index: 100;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .total-label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--text-muted);
+    }
+
+    .total-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* Botones de Pago Rápido */
+    .payment-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .quick-pay-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .btn-pay-quick {
+      padding: 8px 0;
+      border: 1px solid var(--border);
+      background: #f1f5f9;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-pay-quick.active {
+      background: #1e293b;
+      color: white;
+      border-color: #1e293b;
+    }
+
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .payment-input-container {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .payment-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+
+    .payment-input:focus {
+      border-color: var(--primary);
+    }
+
+    .change-display {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--success);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Acciones: Guardar y Nueva Venta */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-action {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-save {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-save:active {
+      background: var(--success-hover);
+    }
+
+    .btn-reset {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-reset:active {
+      background: var(--danger-hover);
+    }
+
+    /* Modal / Resumen Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      z-index: 200;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      width: 100%;
+      max-width: 550px;
+      border-radius: 16px 16px 0 0;
+      padding: 16px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .btn-close-modal {
+      background: #e2e8f0;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .summary-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 0.95rem;
+    }
+
+    .summary-stat.total {
+      border-top: 2px solid var(--border);
+      margin-top: 6px;
+      padding-top: 8px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--success);
+    }
+
+    .summary-item-list {
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    .summary-item-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .price-edit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .price-edit-row label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .price-edit-row input {
+      width: 90px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-share {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-clear-history {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
@@ -199,6 +744,375 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    let counts = { dulce: 0, torta: 0 };
+    let llevaBolsa = false;
+    let molidoTipo = 0;
+    let selectedQuickPay = null;
+
+    // Precios Base por defecto o guardados en localStorage
+    let basePrices = JSON.parse(localStorage.getItem('pan_base_prices')) || {
+      dulce: 7,
+      torta: 4,
+      bolsa: 1,
+      molidoMedio: 15,
+      molidoKilo: 30
+    };
+
+    let temporadaItems = JSON.parse(localStorage.getItem('pan_temporada_v2')) || [
+      { id: 1, name: '🥮Pan de Muerto', price: 25, count: 0 },
+      { id: 2, name: '🍩Rosca de Reyes', price: 200, count: 0 }
+    ];
+
+    let salesHistory = JSON.parse(localStorage.getItem('pan_sales_history_v2')) || [];
+
+    function updatePriceLabels() {
+      document.getElementById('display-price-dulce').innerText = `$${basePrices.dulce.toFixed(2)} c/u`;
+      document.getElementById('display-price-torta').innerText = `$${basePrices.torta.toFixed(2)} c/u`;
+      document.getElementById('display-label-bolsa').innerText = `🛍️Bolsa (+$${basePrices.bolsa.toFixed(2)})`;
+      document.getElementById('molido-medio').innerText = `1/2 Kilo ($${basePrices.molidoMedio})`;
+      document.getElementById('molido-kilo').innerText = `1 Kilo ($${basePrices.molidoKilo})`;
+    }
+
+    function openPricesModal() {
+      document.getElementById('edit-price-dulce').value = basePrices.dulce;
+      document.getElementById('edit-price-torta').value = basePrices.torta;
+      document.getElementById('edit-price-bolsa').value = basePrices.bolsa;
+      document.getElementById('edit-price-molido-medio').value = basePrices.molidoMedio;
+      document.getElementById('edit-price-molido-kilo').value = basePrices.molidoKilo;
+      
+      document.getElementById('prices-modal').classList.add('active');
+    }
+
+    function closePricesModal() {
+      document.getElementById('prices-modal').classList.remove('active');
+    }
+
+    function saveBasePrices() {
+      basePrices.dulce = parseFloat(document.getElementById('edit-price-dulce').value) || 0;
+      basePrices.torta = parseFloat(document.getElementById('edit-price-torta').value) || 0;
+      basePrices.bolsa = parseFloat(document.getElementById('edit-price-bolsa').value) || 0;
+      basePrices.molidoMedio = parseFloat(document.getElementById('edit-price-molido-medio').value) || 0;
+      basePrices.molidoKilo = parseFloat(document.getElementById('edit-price-molido-kilo').value) || 0;
+
+      localStorage.setItem('pan_base_prices', JSON.stringify(basePrices));
+      updatePriceLabels();
+      calculateTotal();
+      closePricesModal();
+      showToast('⚙️ Precios actualizados');
+    }
+
+    function adjustCount(type, delta) {
+      counts[type] = Math.max(0, (parseInt(counts[type]) || 0) + delta);
+      document.getElementById(`count-${type}`).value = counts[type];
+      calculateTotal();
+    }
+
+    function onInputCount(type) {
+      const val = parseInt(document.getElementById(`count-${type}`).value);
+      counts[type] = isNaN(val) || val < 0 ? 0 : val;
+      calculateTotal();
+    }
+
+    function adjustTempCount(id, delta) {
+      const item = temporadaItems.find(i => i.id === id);
+      if (item) {
+        item.count = Math.max(0, (parseInt(item.count) || 0) + delta);
+        const input = document.getElementById(`count-temp-${id}`);
+        if (input) input.value = item.count;
+        calculateTotal();
+      }
+    }
+
+    function onInputTempCount(id) {
+      const item = temporadaItems.find(i => i.id === id);
+      if (item) {
+        const val = parseInt(document.getElementById(`count-temp-${id}`).value);
+        item.count = isNaN(val) || val < 0 ? 0 : val;
+        calculateTotal();
+      }
+    }
+
+    function setBolsa(val) {
+      llevaBolsa = val;
+      document.getElementById('bolsa-no').classList.toggle('active', !val);
+      document.getElementById('bolsa-si').classList.toggle('active', val);
+      calculateTotal();
+    }
+
+    function setMolido(pType, tipo) {
+      molidoTipo = tipo;
+      document.getElementById('molido-0').classList.toggle('active', tipo === 0);
+      document.getElementById('molido-medio').classList.toggle('active', tipo === 'medio');
+      document.getElementById('molido-kilo').classList.toggle('active', tipo === 'kilo');
+      calculateTotal();
+    }
+
+    function renderTemporada() {
+      const container = document.getElementById('temporada-container');
+      container.innerHTML = '';
+
+      temporadaItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="item-row">
+            <div class="item-info">
+              <div class="item-title">${item.name} <button class="btn-delete" onclick="deleteTemporadaItem(${item.id})">✕</button></div>
+              <div class="item-price">$${item.price.toFixed(2)} c/u</div>
+            </div>
+            <div class="counter">
+              <button class="btn-counter" onclick="adjustTempCount(${item.id}, -1)">-</button>
+              <input type="number" id="count-temp-${item.id}" class="count-input" value="${item.count}" min="0" oninput="onInputTempCount(${item.id})" onfocus="this.select()">
+              <button class="btn-counter" onclick="adjustTempCount(${item.id}, 1)">+</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      saveTemporadaState();
+      calculateTotal();
+    }
+
+    function addTemporadaItem() {
+      const nameInput = document.getElementById('new-temp-name');
+      const priceInput = document.getElementById('new-temp-price');
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value);
+
+      if (name && !isNaN(price) && price > 0) {
+        temporadaItems.push({ id: Date.now(), name: name, price: price, count: 0 });
+        nameInput.value = '';
+        priceInput.value = '';
+        renderTemporada();
+      }
+    }
+
+    function deleteTemporadaItem(id) {
+      temporadaItems = temporadaItems.filter(i => i.id !== id);
+      renderTemporada();
+    }
+
+    function saveTemporadaState() {
+      const toSave = temporadaItems.map(i => ({ id: i.id, name: i.name, price: i.price, count: 0 }));
+      localStorage.setItem('pan_temporada_v2', JSON.stringify(toSave));
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      total += counts.dulce * basePrices.dulce;
+      total += counts.torta * basePrices.torta;
+      if (llevaBolsa) total += basePrices.bolsa;
+      
+      if (molidoTipo === 'medio') total += basePrices.molidoMedio;
+      if (molidoTipo === 'kilo') total += basePrices.molidoKilo;
+
+      temporadaItems.forEach(item => {
+        total += (parseInt(item.count) || 0) * item.price;
+      });
+
+      document.getElementById('total-display').innerText = `$${total.toFixed(2)}`;
+      calculateChange();
+    }
+
+    function setQuickPay(amount) {
+      selectedQuickPay = amount;
+      document.getElementById('pago-input').value = amount;
+      
+      const buttons = document.querySelectorAll('.btn-pay-quick');
+      buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === `$${amount}`);
+      });
+
+      calculateChange();
+    }
+
+    function onCustomPayInput() {
+      selectedQuickPay = null;
+      document.querySelectorAll('.btn-pay-quick').forEach(b => b.classList.remove('active'));
+      calculateChange();
+    }
+
+    function calculateChange() {
+      const totalStr = document.getElementById('total-display').innerText.replace('$', '');
+      const total = parseFloat(totalStr) || 0;
+      const pago = parseFloat(document.getElementById('pago-input').value) || 0;
+
+      const cambioDisplay = document.getElementById('cambio-display');
+
+      if (pago >= total && total > 0) {
+        const cambio = pago - total;
+        cambioDisplay.innerText = `Cambio: $${cambio.toFixed(2)}`;
+        cambioDisplay.style.color = 'var(--success)';
+      } else if (pago < total && pago > 0) {
+        cambioDisplay.innerText = `Falta $${(total - pago).toFixed(2)}`;
+        cambioDisplay.style.color = 'var(--danger)';
+      } else {
+        cambioDisplay.innerText = `$0.00`;
+        cambioDisplay.style.color = '#94a3b8';
+      }
+    }
+
+    function getCurrentSaleDetails() {
+      const totalStr = document.getElementById('total-display').innerText.replace('$', '');
+      const total = parseFloat(totalStr) || 0;
+
+      let items = [];
+      if (counts.dulce > 0) items.push({ name: `Pan de Dulce ($${basePrices.dulce})`, qty: counts.dulce, subtotal: counts.dulce * basePrices.dulce });
+      if (counts.torta > 0) items.push({ name: `Pan de Torta ($${basePrices.torta})`, qty: counts.torta, subtotal: counts.torta * basePrices.torta });
+      if (llevaBolsa) items.push({ name: 'Bolsa', qty: 1, subtotal: basePrices.bolsa });
+      if (molidoTipo === 'medio') items.push({ name: 'Pan Molido 1/2kg', qty: 1, subtotal: basePrices.molidoMedio });
+      if (molidoTipo === 'kilo') items.push({ name: 'Pan Molido 1kg', qty: 1, subtotal: basePrices.molidoKilo });
+
+      temporadaItems.forEach(item => {
+        if (item.count > 0) {
+          items.push({ name: item.name, qty: item.count, subtotal: item.count * item.price });
+        }
+      });
+
+      return { total, items, timestamp: new Date().toISOString() };
+    }
+
+    function saveSale() {
+      const sale = getCurrentSaleDetails();
+
+      if (sale.total <= 0) {
+        showToast('⚠️ No hay nada seleccionado para cobrar');
+        return;
+      }
+
+      salesHistory.push(sale);
+      localStorage.setItem('pan_sales_history_v2', JSON.stringify(salesHistory));
+
+      showToast(`✅ Venta de $${sale.total.toFixed(2)} guardada`);
+      resetSale();
+    }
+
+    function resetSale() {
+      counts.dulce = 0;
+      counts.torta = 0;
+      document.getElementById('count-dulce').value = '0';
+      document.getElementById('count-torta').value = '0';
+
+      setBolsa(false);
+      setMolido(0, 0);
+
+      temporadaItems.forEach(i => i.count = 0);
+      document.getElementById('pago-input').value = '';
+      selectedQuickPay = null;
+      document.querySelectorAll('.btn-pay-quick').forEach(b => b.classList.remove('active'));
+
+      renderTemporada();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function openSummaryModal() {
+      const modal = document.getElementById('summary-modal');
+      const sumCount = document.getElementById('sum-count');
+      const sumTotal = document.getElementById('sum-total');
+      const breakdownContainer = document.getElementById('summary-breakdown');
+
+      let grandTotal = 0;
+      let totalSalesCount = salesHistory.length;
+      let breakdown = {};
+
+      salesHistory.forEach(sale => {
+        grandTotal += sale.total;
+        sale.items.forEach(item => {
+          if (!breakdown[item.name]) breakdown[item.name] = { qty: 0, money: 0 };
+          breakdown[item.name].qty += item.qty;
+          breakdown[item.name].money += item.subtotal;
+        });
+      });
+
+      sumCount.innerText = totalSalesCount;
+      sumTotal.innerText = `$${grandTotal.toFixed(2)}`;
+
+      breakdownContainer.innerHTML = '';
+      if (Object.keys(breakdown).length === 0) {
+        breakdownContainer.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 10px;">Aún no hay ventas guardadas hoy.</div>';
+      } else {
+        for (const [name, data] of Object.entries(breakdown)) {
+          const row = document.createElement('div');
+          row.className = 'summary-item-row';
+          row.innerHTML = `<span><strong>${data.qty}x</strong> ${name}</span><span>$${data.money.toFixed(2)}</span>`;
+          breakdownContainer.appendChild(row);
+        }
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeSummaryModal() {
+      document.getElementById('summary-modal').classList.remove('active');
+    }
+
+    function generateSummaryText() {
+      let grandTotal = 0;
+      let breakdown = {};
+
+      salesHistory.forEach(sale => {
+        grandTotal += sale.total;
+        sale.items.forEach(item => {
+          if (!breakdown[item.name]) breakdown[item.name] = 0;
+          breakdown[item.name] += item.qty;
+        });
+      });
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' });
+
+      let text = `🍞 *RESUMEN DE VENTAS - PANADERÍA*\n📅 ${dateStr}\n\n`;
+      text += `💰 *Total Ganado:* $${grandTotal.toFixed(2)}\n`;
+      text += `🧾 *Ventas Realizadas:* ${salesHistory.length}\n\n`;
+      text += `*Desglose de productos vendidos:*\n`;
+
+      if (Object.keys(breakdown).length === 0) {
+        text += `- Ninguna venta registrada.\n`;
+      } else {
+        for (const [name, qty] of Object.entries(breakdown)) {
+          text += `• ${name}: ${qty} pza(s)\n`;
+        }
+      }
+
+      return text;
+    }
+
+    async function shareSummary() {
+      const summaryText = generateSummaryText();
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Resumen de Ventas - Panadería',
+            text: summaryText
+          });
+        } catch (err) {
+          console.log('Compartir cancelado');
+        }
+      } else {
+        navigator.clipboard.writeText(summaryText);
+        alert('📋 Resumen copiado al portapapeles. Puedes pegarlo en WhatsApp o cualquier red social.');
+      }
+    }
+
+    function clearSalesHistory() {
+      if (confirm('¿Estás seguro de que deseas reiniciar el contador de ventas del día? Se borrará el historial actual.')) {
+        salesHistory = [];
+        localStorage.removeItem('pan_sales_history_v2');
+        openSummaryModal();
+        showToast('Historial reiniciado');
+      }
+    }
+
+    updatePriceLabels();
+    renderTemporada();
+  </script>
 </body>
 </html>
