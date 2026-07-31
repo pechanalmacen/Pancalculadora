@@ -1,0 +1,15 @@
+{
+  "name": "Caja Panadería",
+  "short_name": "Panadería",
+  "start_url": "Panaderia.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
