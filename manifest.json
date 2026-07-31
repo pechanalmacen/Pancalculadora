@@ -1,14 +1,14 @@
 {
-  "name": "Caja Panadería",
-  "short_name": "Panadería",
-  "start_url": "Panaderia.html",
+  "name": "Calculadora de Panaderia",
+  "short_name": "PanCalculadora",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#d97706",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "512x512",
+      "src": "pancalculator.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]
