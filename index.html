@@ -750,18 +750,19 @@
     let molidoTipo = 0;
     let selectedQuickPay = null;
 
-    // Precios Base por defecto o guardados en localStorage
+      // Precios Base por defecto o guardados en localStorage
     let basePrices = JSON.parse(localStorage.getItem('pan_base_prices')) || {
       dulce: 7,
       torta: 4,
       bolsa: 1,
-      molidoMedio: 15,
-      molidoKilo: 30
+      molidoMedio: 20,
+      molidoKilo: 40
     };
 
     let temporadaItems = JSON.parse(localStorage.getItem('pan_temporada_v2')) || [
-      { id: 1, name: '🥮Pan de Muerto', price: 25, count: 0 },
-      { id: 2, name: '🍩Rosca de Reyes', price: 200, count: 0 }
+      { id: 1, name: '🥮Pan de Muerto', price: 15, count: 0 },
+      { id: 2, name: '🥖Baguette', price: 12, count: 0 },
+      { id: 3, name: '🍩Rosca de Reyes', price: 200, count: 0 }
     ];
 
     let salesHistory = JSON.parse(localStorage.getItem('pan_sales_history_v2')) || [];
